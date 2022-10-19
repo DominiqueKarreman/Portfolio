@@ -1,19 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import group from "../assets/group.png";
-import pfp from "../assets/Group.svg";
-function screen() {
+import pfp from "../assets/pfp2.svg";
+import portfolioPic from "../assets/portfolio.svg";
+import contactPic from "../assets/contact.svg";
+import skillsPic from "../assets/skills.svg";
+import logo from "../assets/logo.svg";
+import {useInView} from 'react-intersection-observer'
+function screen({ state, setState }) {
   const [active, setActive] = useState("software");
+  const [preview, setPreview] = useState("");
+  const { ref: myRef, inView, entry } = useInView({
+    /* Optional options */
+    threshold: 0.5,
+  });
+
+  const {myRef2, inView: inView2 } = useInView({
+    /* Optional options */
+    threshold: 1,
+  });
+ 
+
+  useEffect(() => {
+    if (inView) {
+      setState("software")
+      console.log(inView, "inview", state, "state")
+    } 
+   
+  }, [inView])
+
+
 
   return (
-    <div className="screen">
-      <img className="img" src={group} alt="logo" />
+    <div ref={myRef} className={"screen2"} >
+      
+      <div className={state === "software" ? "screen" : "notVisible"} >
+
+      <img ref={myRef}className="img" src={group} alt="logo" />
+      <img className="logo" src={logo} alt="logo" />
       <img className="pfp" src={pfp} alt="logo" />
+      {preview === "portfolio" ? (<img className="pfp" src={portfolioPic} alt="logo" />) : null}
+      {preview === "contact" ? (<img className="pfp" src={contactPic} alt="logo" />) : null}
+      {preview === "skills" ? (<img className="pfp" src={skillsPic} alt="logo" />) : null}
+      {/* <img className="pfp" src={portfolioPic} alt="logo" /> */}
+      {/* <img className="pfp" src={contactPic} alt="logo" /> */}
+      {/* <img className="pfp" src={skillsPic} alt="logo" /> */}
       <div className="topnav">
         <a
           className={active === "software" ? "active" : "inactive"}
           href="#home"
-        >
+          >
           //Software Developer
         </a>
         <a className={active === "photo" ? "active" : "inactive"} href="#news">
@@ -27,13 +63,13 @@ function screen() {
         </div>
       </div>
       <div className="links">
-        <a href="https://www.linkedin.com/in/abhishek-kumar-0a1b1b1b1/">
+        <a onMouseEnter={() => setPreview("portfolio")} onMouseLeave={() => setPreview("")}  href="https://www.linkedin.com/in/abhishek-kumar-0a1b1b1b1/">
           #Portfolio
         </a>
-        <a href="https://www.linkedin.com/in/abhishek-kumar-0a1b1b1b1/">
+        <a onMouseEnter={() => setPreview("skills")} onMouseLeave={() => setPreview("")} href="https://www.linkedin.com/in/abhishek-kumar-0a1b1b1b1/">
           #Skills
         </a>
-        <a href="https://www.linkedin.com/in/abhishek-kumar-0a1b1b1b1/">
+        <a onMouseEnter={() => setPreview("contact")} onMouseLeave={() => setPreview("")} href="https://www.linkedin.com/in/abhishek-kumar-0a1b1b1b1/">
           #Contact
         </a>
       </div>
@@ -57,7 +93,10 @@ function screen() {
         </div>
           <span id="lastdiv" className="red">{"</div>"}</span>
       </section>
+      <a href="#lower"> 
       <button className="button">Explore</button>
+      </a> 
+          </div>
     </div>
   );
 }
