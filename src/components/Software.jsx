@@ -29,8 +29,14 @@ function screen({ state, setState }) {
    
   }, [inView])
 
-
-
+  function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
+  }
+  let dimensions = getWindowDimensions();
   return (
     <div ref={myRef} className={"screen2"} >
       
@@ -56,6 +62,7 @@ function screen({ state, setState }) {
           //Photo & Videography
         </a>
         <div className="nameDiv">
+
           <h1 className="firstName">Dominique</h1>
           <p className="software">//Software Developer</p>
           <p>//Photo / Videographer</p>
@@ -85,6 +92,7 @@ function screen({ state, setState }) {
         <div className="text">
           <span className="red">{"<p>"}</span>
           <p className="abouttext">
+          {JSON.stringify(dimensions)}
             Hello, I am Dominique Karreman, <br /> A second year IT student at
             Windesheim Flevoland based in the Netherlands. I like to program a
             lot in my spare time I am learning new stuff all the time!{" "}
