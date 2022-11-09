@@ -9,11 +9,11 @@ import django from "../assets/django.png";
 import PortfolioGrid from "./PortfolioGrid";
 import { useInView } from "react-intersection-observer";
 import FlipCard from "./flipCard";
-function LowerDiv({ stateUpdate }) {
+function LowerDiv({ stateUpdate, state2, setLastView, lastView }) {
   const [counter, setCounter] = useState(0);
   const [portfolio, showPortfolio] = useState(false);
   const gridRef = useRef();
-  const overlayRef= useRef();
+  const overlayRef = useRef();
   const buttonRef = useRef();
   const portTitle = useRef();
   const titleRef = useRef();
@@ -35,8 +35,7 @@ function LowerDiv({ stateUpdate }) {
   });
 
   async function updateOpacity(mode) {
-    console.log(document.getElementsByClassName('gridItem'))
-    let gridItems = document.getElementsByClassName('gridItem')
+    let gridItems = document.getElementsByClassName("gridItem");
     let timing = 0;
     for (const card of gridItems) {
       if (mode) {
@@ -47,95 +46,60 @@ function LowerDiv({ stateUpdate }) {
         card.style.opacity = 0;
       }
     }
-    if(mode){
-    portTitle.current.style.opacity = 1;
-    overlayRef.current.style.opacity = 1;
-    await timeout(1000);
-    titleRef.current.style.opacity = 1;
-    await timeout(800);
-    pRef.current.style.opacity = 1;
-    await timeout(800);
-    buttonRef.current.style.opacity = 1;
-  }
-    else{
+    if (mode) {
+      portTitle.current.style.opacity = 1;
+      overlayRef.current.style.opacity = 1;
+
+      titleRef.current.style.transitionDelay = "1000ms";
+      titleRef.current.style.opacity = 1;
+
+      pRef.current.style.opacity = 1;
+      pRef.current.style.transitionDelay = "1800ms";
+
+      buttonRef.current.style.opacity = 1;
+      buttonRef.current.style.pointerEvents = "all";
+      buttonRef.current.style.transitionDelay = "2600ms";
+      await timeout(3000);
+      state2("Skills");
+    } else {
+      
+      titleRef.current.style.transitionDelay = "0ms";
+      pRef.current.style.transitionDelay = "0ms";
+      buttonRef.current.style.transitionDelay = "0ms";
+
       portTitle.current.style.opacity = 0;
       overlayRef.current.style.opacity = 0;
       buttonRef.current.style.opacity = 0;
+      buttonRef.current.style.pointerEvents = "none";
       titleRef.current.style.opacity = 0;
       pRef.current.style.opacity = 0;
+    }
   }
+  async function lastViewer() {
+    await timeout(3000);
+    setLastView("projects")
   }
-
-  console.log(inView);
   useEffect(() => {
     if (inView) {
+      lastViewer()
       stateUpdate("lower");
-     updateOpacity(true);
+      updateOpacity(true);
     } else {
       updateOpacity(false);
-      
     }
   }, [inView]);
 
   function timeout(delay) {
     return new Promise((res) => setTimeout(res, delay));
   }
-  // useEffect(() => {
-  //   console.log(myRef.current)
-  //   const observer = new IntersectionObserver(entries => {
-  //   const entry = entries[0]
-  //   if (entry.isIntersecting) {
-  //     console.log('in view')
-  //     stateUpdate("lower")
 
-  //   } else {
-  //     console.log('out of view')
-  //     stateUpdate('software')
-  //   }
-  //     // entries.forEach(entry => {
-  //     //   if (entry.isVisible) {
-  //     //     console.log(entry)
-  //     //   }
-  //     // })
-  //   })
-  //   observer.observe(myRef.current)
-  // }, [])
-
-  // const handleOnMouseMove = (e) => {
-  //   const { currentTarget: target } = e;
-  //   const rect = target.getBoundingClientRect(),
-  //     x = e.clientX - rect.left,
-  //     y = e.clientY - rect.top;
-
-  //   target.style.setProperty("--mouse-x", `${x}px`);
-  //   target.style.setProperty("--mouse-y", `${y}px`);
-  // };
-
-  // for (const item of document.querySelectorAll(".gridItem")) {
-  //   item.onmousemove = (e) => handleOnMouseMove(e);
-  // }
-
-  // useEffect(() => {
-  //   console.log(gridRef.current);
-  //   let grid = gridRef.current;
-  //   grid.onmousemove = (e) => {
-  //     for (const card of document.getElementsByClassName("gridItem")) {
-  //       const rect = card.getBoundingClientRect(),
-  //         x = e.clientX - rect.left,
-  //         y = e.clientY - rect.top;
-
-  //       card.style.setProperty("--mouse-x", `${x}px`);
-  //       card.style.setProperty("--mouse-y", `${y}px`);
-  //     }
-  //   };
-  // }, []);
-  //
   const column1 = useRef();
   const column2 = useRef();
   const column3 = useRef();
   let counter2 = 0;
 
   useEffect(() => {
+    document.body.style.top = `${0}vh`  
     column1.current.style.top = `${-82}vh`;
     column2.current.style.top = `${82}vh`;
     column3.current.style.top = `${-125}vh`;
@@ -167,7 +131,6 @@ function LowerDiv({ stateUpdate }) {
     } else {
       if (column2.current?.style.top) {
         column2.current.style.top = `${parseInt(current2) - 1}vh`;
-     
       }
     }
 
@@ -182,8 +145,6 @@ function LowerDiv({ stateUpdate }) {
       }
     }
   }
-
-
 
   const portfolioItems = [
     {
@@ -288,9 +249,69 @@ function LowerDiv({ stateUpdate }) {
       },
     },
   ];
+  //detect when mouse scrolls down
+//   async function moveBody(direction) {
+//     //scroll the page
+
+    
+//     let current = document.body.style.top.split("vh")[0];
+//     console.log(current)
+//     if (direction === "down") {
+//     if (document.body.style.top === "0vh") {
+      
+//       document.body.style.top = `${-100}vh`;
+//     }
+//     // if (document.body.style.top === "-100vh") {
+//     //   document.body.style.top = `${-200}vh`;
+//     // }
+//     // if (document.body.style.top === "-200vh") {
+//     //   document.body.style.top = `${-300}vh`;
+//     // }
+//     // if (document.body.style.top === "-300vh") {
+//     //   document.body.style.top = `${-400}vh`;
+//     // }
+//     } else {
+//       if (document.body.style.top === "-100vh") {
+//       document.body.style.top = `${0}vh`;
+//     }
+//     // if (document.body.style.top === "-200vh") {
+//     //   document.body.style.top = `${-100}vh`;
+//     // }
+//     // if (document.body.style.top === "-300vh") {
+//     //   document.body.style.top = `${-200}vh`;
+//     // }
+//     // if (document.body.style.top === "-400vh") {
+//     //   document.body.style.top = `${-300}vh`;
+//     // }
+//   }
+//   } 
+
+
+//   function preventScroll(e) {
+
+//     e.preventDefault();
+//     e.stopPropagation();
+// }
+
+//   window.addEventListener('wheel', function(event)
+//   {
+//    //prevent mouse from scrolling
+//    preventScroll(event)
+
+//    if (event.deltaY < 0)
+//    {
+    
+//     moveBody("up")
+//    }
+//    else if (event.deltaY > 0)
+//    {
+//     moveBody("down")
+    
+//    }
+//   },{ passive: false });
+
 
   const grid = portfolioItems.map((item, index) => {
-    console.log(index, "index");
     if (index === 0) {
       return (
         <div ref={column1} id={"firstColumn"} className="column">
@@ -406,16 +427,26 @@ function LowerDiv({ stateUpdate }) {
 
   return (
     <div ref={myRef} id="lower" className="lowerDiv">
-
-      <h1 ref={portTitle}className="portfolioTitle">Portfolio</h1>
       {/* <div ref={gridRef} className="gridDiv">
         <PortfolioGrid stateUpdate={stateUpdate} ref={myRef} data={data} />
       </div> */}
       <div ref={overlayRef} className="overlay"></div>
       <div className="columnDivs">{grid}</div>
-      <h1 ref={titleRef} id={"bigTitle"}>Take a look at my Projects!</h1>
-      <p ref={pRef}id={"projectDescription"}>View all of the projects that i have made so far!</p>
-      <button ref={buttonRef} id={"projectbutton"}>View Projects</button>
+      <div className="infoDiv">
+      <h1 ref={portTitle} className="portfolioTitle">
+        Portfolio
+      </h1>
+
+      <h1 ref={titleRef} id={"bigTitle"}>
+        Take a look at my Projects!
+      </h1>
+      <p ref={pRef} id={"projectDescription"}>
+        View all of the projects that i have made so far!
+      </p>
+      <button onClick={() => console.log("buttonpress")}ref={buttonRef} id={"projectbutton"}>
+        View Projects
+      </button>
+      </div>
     </div>
   );
 }

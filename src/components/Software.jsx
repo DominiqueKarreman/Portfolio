@@ -7,7 +7,7 @@ import contactPic from "../assets/contact.svg";
 import skillsPic from "../assets/skills.svg";
 import logo from "../assets/logo.svg";
 import {useInView} from 'react-intersection-observer'
-function screen({ state, setState }) {
+function screen({ state, setState, setLastView, lastView }) {
   const [active, setActive] = useState("software");
   const [preview, setPreview] = useState("");
   const { ref: myRef, inView, entry } = useInView({
@@ -24,6 +24,7 @@ function screen({ state, setState }) {
   useEffect(() => {
     if (inView) {
       setState("software")
+      setLastView("software")
       console.log(inView, "inview", state, "state")
     } 
    
